@@ -211,7 +211,7 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
 
                 // --- 1. Lógica de Categorias (Leitura e Atualização) ---
                 try {
-                    const exctgrItemMenu = await dataRead('products', ['type', 'categoryProductMenu'], env);
+                    const exctgrItemMenu = await dataRead('products', {type: 'categoryProductMenu'}, env);
 
                     if (exctgrItemMenu && exctgrItemMenu.data) {
                         // Se categorias existentes foram encontradas:
