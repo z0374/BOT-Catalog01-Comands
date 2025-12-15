@@ -82,21 +82,23 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
                 for(const v of productsVizualization){
                 const messageVizualization = [];
                 if(normalize(v.type) == normalize("categoryProductMenu")) continue;
-                
+
                     for(const i of (v.data).split(",")){
                         const assetsVizualization = await dataRead('assets', {id: i}, env);
                         messageVizualization.push(assetsVizualization.data);
                         console.log(messageVizualization);
                     }
                         const finalMessage = `Categoria: ${v.type}\n\nProduto: <b>${messageVizualization[0]}</b>\nDescrição: ${messageVizualization[2]}\n\nPreço: ${messageVizualization[3]}`;
-                        await sendMidia([messageVizualization[0], finalMessage], chatId, env);
+                        let imgVizualization = await downloadGdrive(messageVizualization[0], env, chatId);
+                        await sendMidia([imgVizualization, finalMessage], chatId, env);
                 }
+                return new Response('OK');
             break;
     
         default:
             break;
     }
-    if(!userState.state) return;
+    if(!userState.state) return new Response('OK');
     switch (normalize(userState.state)) {
         case normalize('waiting_section_itemsmenu'):
             userState.procesCont = 0;
@@ -199,7 +201,7 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
             const vlrItemMenu = dataItemId[4][0];
 
             // Download para visualização:
-            const imgItemMenu = await downloadGdrive(imgItemMenuFileId, env, chatId)
+            const imgItemMenu = await downloadGdrive(imgItemMenuFileId, env, chatId);
 
             const msgItemMenu = `Categoria: ${ctgItemMenu}\n\nProduto: ${nomItemMenu}\nDescrição: ${desItemMenu.replace(/\|br\|/g, ', ')}\nPreço: ${BRL(vlrItemMenu)}\n\n .......................`;
             await sendMidia([imgItemMenu, msgItemMenu], chatId, env);
