@@ -74,8 +74,6 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
         case normalize("Ver_itemsMenu"):
             console.log("ver Items - entrou")
             userState.procesCont = 0;
-            userState = null;
-            await saveUserState(env, userId, userState);
             const productsVizualization = (await dataRead('products', {type: comand[0]}, env));
             await sendMessage(`Sr. ${userName},\nSegue em cards os items da categoria ${comand[0]}`, chatId, env);
                 for(const v of productsVizualization){
@@ -87,6 +85,9 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
                         const finalMessage = `Categoria: ${comand[0]}\n\nProduto: <b>${messageVizualization[0]}</b>\nDescrição: ${messageVizualization[2]}\n\nPreço: ${messageVizualization[3]}`;
                         await sendMidia([messageVizualization[0], finalMessage], chatId, env);
                 }
+            
+            userState = null;
+            await saveUserState(env, userId, userState);
             break;
     
         default:
