@@ -215,8 +215,8 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
 
                     if (exctgrItemMenu && exctgrItemMenu.data) {
                         // Se categorias existentes foram encontradas:
-await sendCallBackMessage(typeof exctgrItemMenu.data, chatId, env);
                         let vlrExctgrItemMenu = exctgrItemMenu.data.split(',').map(f => f.trim());
+await sendCallBackMessage(typeof exctgrItemMenu.data, chatId, env);
                         if (!vlrExctgrItemMenu.includes(itemsMenu[3][0])) {
                             vlrExctgrItemMenu.push(itemsMenu[3][0]);
                             // ATUALIZA a lista de categorias usando updateData()
@@ -231,7 +231,7 @@ await sendCallBackMessage(typeof exctgrItemMenu.data, chatId, env);
                         categoryItemsMenu = itemsMenu[3][0];
                     }
                 } catch (error) {
-                    const logErro = 'Erro ao salvar/atualizar categoria do item do menu. Detalhe: ' + error.message;
+                    const logErro = 'Erro ao salvar/atualizar categoria do item do menu. Detalhe: ' + error.stack;
                     await sendCallBackMessage(logErro, chatId, env);
                     throw new Error(logErro); // Propaga a falha de persistência
                 }
