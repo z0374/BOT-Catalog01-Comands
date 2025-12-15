@@ -216,7 +216,7 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
                     if (exctgrItemMenu && exctgrItemMenu.data) {
                         // Se categorias existentes foram encontradas:
 await sendCallBackMessage(typeof exctgrItemMenu.data, chatId, env);
-                        let vlrExctgrItemMenu = (exctgrItemMenu.data).split(',').map(f => f.trim());
+                        let vlrExctgrItemMenu = exctgrItemMenu.data.split(',').map(f => f.trim());
                         if (!vlrExctgrItemMenu.includes(itemsMenu[3][0])) {
                             vlrExctgrItemMenu.push(itemsMenu[3][0]);
                             // ATUALIZA a lista de categorias usando updateData()
