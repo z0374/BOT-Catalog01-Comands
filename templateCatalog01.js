@@ -2,7 +2,7 @@
 
 // Importações de Módulos (Assumindo a estrutura de diretórios do repositório)
 import { loadUserState, saveUserState } from "../../src/db/session.js";
-import { dataSave, dataExist, dataRead } from "../../src/db/D1.js";
+import { dataSave, dataExist, dataRead, dataUpdate } from "../../src/db/D1.js";
 import { sendMessage, sendCallBackMessage, sendMidia } from "../../src/utils/message.js";
 import { normalize, brMap, BRL } from "../../src/utils/formatters.js";
 import { image } from "../../src/utils/arquives.js"; // Função 'image' agora requer 4 argumentos (fileId, name, mimeType, env, chatId)
