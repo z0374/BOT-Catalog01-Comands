@@ -220,7 +220,7 @@ await sendCallBackMessage(typeof exctgrItemMenu.data +' - '+ vlrExctgrItemMenu, 
                         if (!vlrExctgrItemMenu.includes(itemsMenu[3][0])) {
                             vlrExctgrItemMenu.push(itemsMenu[3][0]);
                             // ATUALIZA a lista de categorias usando updateData()
-                            await dataUpdate([(vlrExctgrItemMenu.join(',')), 'categoryProductMenu'], ['products', 'data, type'], env, chatId);
+                            await dataUpdate([(vlrExctgrItemMenu.join(',')), 'categoryProductMenu'], ['products', 'data, type'], chatId, env);
                             categoryItemsMenu = itemsMenu[3][0];
                         } else {
                             categoryItemsMenu = itemsMenu[3][0];
