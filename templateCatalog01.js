@@ -78,7 +78,7 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
             await saveUserState(env, userId, userState);
             const column = normalize(comand[0]) != normalize("ver") ? {type: comand[0]} : {};
             const productsVizualization = (await dataRead('products', column, env));
-            await sendMessage(`Sr. ${userName},\nSegue em cards os items da categoria ${comand[0]}`, chatId, env);
+            await sendMessage(`Sr. ${userName},\nSegue em cards os items do menu`, chatId, env);
                 for(const v of productsVizualization){
                 const messageVizualization = [];
                 if(normalize(v.type) == normalize("categoryProductMenu")) continue;
@@ -89,7 +89,7 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
                         console.log(messageVizualization);
                     }
                         const finalMessage = `Categoria: ${v.type}\n\nProduto: <b>${messageVizualization[0]}</b>\nDescrição: ${messageVizualization[2]}\n\nPreço: ${messageVizualization[3]}`;
-                        let imgVizualization = await downloadGdrive(messageVizualization[0], env, chatId);
+                        let imgVizualization = await downloadGdrive(messageVizualization[1], env, chatId);
                         await sendMidia([imgVizualization, finalMessage], chatId, env);
                 }
                 return new Response('OK');
