@@ -92,6 +92,7 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
                         let imgVizualization = await downloadGdrive(messageVizualization[1], env, chatId);
                         await sendMidia([imgVizualization, finalMessage], chatId, env);
                 }
+                await sendMessage(`/comandos${indent}|${indent}/${comandTemplateCatalog01}`, chatId, env);
                 return new Response('OK');
             break;
     
