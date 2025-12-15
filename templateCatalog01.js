@@ -74,25 +74,29 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
         case normalize("Ver_itemsMenu"):
             console.log("ver Items - entrou")
             userState.procesCont = 0;
-            const productsVizualization = (await dataRead('products', {type: comand[0]}, env));
+            userState = null;
+            await saveUserState(env, userId, userState);
+            const column = normalize(comand[0]) != normalize("ver") ? {type: comand[0]} : {};
+            const productsVizualization = (await dataRead('products', column, env));
             await sendMessage(`Sr. ${userName},\nSegue em cards os items da categoria ${comand[0]}`, chatId, env);
                 for(const v of productsVizualization){
                 const messageVizualization = [];
+                if(normalize(v.type) == normalize("categoryProductMenu")) continue;
+                
                     for(const i of (v.data).split(",")){
                         const assetsVizualization = await dataRead('assets', {id: i}, env);
                         messageVizualization.push(assetsVizualization.data);
+                        console.log(messageVizualization);
                     }
-                        const finalMessage = `Categoria: ${comand[0]}\n\nProduto: <b>${messageVizualization[0]}</b>\nDescrição: ${messageVizualization[2]}\n\nPreço: ${messageVizualization[3]}`;
+                        const finalMessage = `Categoria: ${v.type}\n\nProduto: <b>${messageVizualization[0]}</b>\nDescrição: ${messageVizualization[2]}\n\nPreço: ${messageVizualization[3]}`;
                         await sendMidia([messageVizualization[0], finalMessage], chatId, env);
                 }
-            
-            userState = null;
-            await saveUserState(env, userId, userState);
             break;
     
         default:
             break;
     }
+    if(!userState.state) return;
     switch (normalize(userState.state)) {
         case normalize('waiting_section_itemsmenu'):
             userState.procesCont = 0;
