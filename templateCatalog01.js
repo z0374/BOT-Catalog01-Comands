@@ -18,6 +18,7 @@ export const comandTemplateCatalog01 = "templateCatalog01"
 
 async function handleItensMenuFlow(userState, messageText, userId, chatId, userName, update, env) {
                 const categories = await dataRead("products", { type: "categoryProductMenu" }, env, chatId);
+                let categoriesData;
                 let categoriesList;
                 let itemsList;
                 const usersItemList = ['Atualizar_itemsMenu'];
@@ -26,7 +27,7 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
                 //await sendCallBackMessage("Categorias recuperadas: " + JSON.stringify(categories), chatId,env);
                 if(categories?.data || !normalize(messageText).includes(normalize("itemsmenu"))){
                     //await sendCallBackMessage("Entrou no if", chatId, env);
-                    const categoriesData = categories?.data ? (categories.data).split(',').map(f => f.trim()):"";
+                    categoriesData = categories?.data ? (categories.data).split(',').map(f => f.trim()):"";
                     if(usersItemList.indexOf(messageText) || usersItemList.indexOf(userState.state)){
                         const allItems = await dataRead("products", null, env, chatId);
                         for (const v of categoriesData) {
@@ -82,15 +83,15 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
                 for(const v of productsVizualization){
                 const messageVizualization = [];
                 if(normalize(v.type) == normalize("categoryProductMenu")) continue;
-
+                    const idView = [];
                     for(const i of (v.data).split(",")){
                         const assetsVizualization = await dataRead('assets', {id: i}, env);
-                        messageVizualization.push(data: assetsVizualization.data);
-const idView = [];
-idView.push(i);
+                        messageVizualization.push(assetsVizualization.data);
+
+                        idView.push(i);
 //console.log(messageVizualization);
                     }
-                        const finalMessage = `Categoria: ${v.type}\n\nProduto: <b>${messageVizualization[0]}</b>\nDescrição: ${messageVizualization[2]}\n\nPreço: ${BRL(messageVizualization[3])}\n\n/catg${}_atualizar_itemsMenu$\n/nome${idView[0]}_atualizar_itemsMenu${indent}/desc${idView[2]}_atualizar_itemsMenu${indent}/preco${idview[3]}_atualizar_itemsMenu\n\n\n ${indent}produto${v.id}_excluir_itemsMenu`;
+                        const finalMessage = `Categoria: ${v.type}\n\nProduto: <b>${messageVizualization[0]}</b>\nDescrição: ${messageVizualization[2]}\n\nPreço: ${BRL(messageVizualization[3])}\n\n/catg${categoriesData.indexOf(v.type)}_atualizar_itemsMenu$\n/nome${idView[0]}_atualizar_itemsMenu${indent}/desc${idView[2]}_atualizar_itemsMenu${indent}/preco${idview[3]}_atualizar_itemsMenu\n\n\n ${indent}produto${v.id}_excluir_itemsMenu`;
                         let imgVizualization = await downloadGdrive(messageVizualization[1], env, chatId);
                         await sendMidia([imgVizualization, finalMessage], chatId, env);
                 }
