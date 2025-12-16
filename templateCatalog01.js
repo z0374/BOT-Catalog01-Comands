@@ -91,7 +91,7 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
                         idView.push(i);
 //console.log(messageVizualization);
                     }
-                        const finalMessage = `Categoria: ${v.type}\n\nProduto: <b>${messageVizualization[0]}</b>\nDescrição: ${messageVizualization[2]}\n\nPreço: ${BRL(messageVizualization[3])}\n\n/catg${categoriesData.indexOf(v.type)}_atualizar_itemsMenu$\n/nome${idView[0]}_atualizar_itemsMenu${indent}/desc${idView[2]}_atualizar_itemsMenu${indent}/preco${idview[3]}_atualizar_itemsMenu\n\n\n ${indent}produto${v.id}_excluir_itemsMenu`;
+                        const finalMessage = `Categoria: ${v.type}\n\nProduto: <b>${messageVizualization[0]}</b>\nDescrição: ${messageVizualization[2]}\n\nPreço: ${BRL(messageVizualization[3])}\n\n/catg${categoriesData.indexOf(v.type)}_atualizar_itemsMenu$\n/nome${idView[0]}_atualizar_itemsMenu${indent}/desc${idView[2]}_atualizar_itemsMenu${indent}/preco${idView[3]}_atualizar_itemsMenu\n\n\n ${indent}produto${v.id}_excluir_itemsMenu`;
                         let imgVizualization = await downloadGdrive(messageVizualization[1], env, chatId);
                         await sendMidia([imgVizualization, finalMessage], chatId, env);
                 }
