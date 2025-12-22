@@ -167,7 +167,7 @@ if (canListItems) {
         case normalize('waiting_updateasset_itemsmenu'):
             userState.procesCont = 0;
             userState.state = 'waiting_confirm_itemsmenu';
-            const currentData = dataRead('assets', {id: userState.titulo.replace(/[^0-9]/g, "")}, env)
+            const currentData = dataRead('assets', {id: userState.select[0].replace(/[^0-9]/g, "")},env);
             await saveUserState(env, userId, userState);
             userState.select.push(currentData);
             await sendMessage(`OK sr. ${userName}!\n Deseja alterar a ${userState.titulo.replace(/[^a-zA-Z]/g, "")}\n De ${currentData.data}\nPara ${messageText}`, chatId, env);
