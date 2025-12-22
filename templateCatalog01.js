@@ -32,9 +32,9 @@ const comand = messageText.split("_");
 // ================================
 // 1️⃣ Resolver comando composto SEMPRE primeiro
 // ================================
-const joinedCommand = comand.slice(1).join("_");
+const joinedCommand = normalize(comand.slice(1).join("_"));
 
-if (comand.length > 2 && usersItemList.includes(normalize(joinedCommand))) {
+if (comand.length > 2 && usersItemList.includes(joinedCommand)) {
   messageText = joinedCommand;
   await sendCallBackMessage("Entrou 1!!", chatId, env);
 }
@@ -117,7 +117,7 @@ if (canListItems) {
             userState.procesCont = 0;
             userState.state = 'waiting_update_itemsmenu';
             await saveUserState(env, userId, userState);
-            await sendMessage(`Sr. ${userName}, por gentileza escolha pelo nome qual item deseja Atualizar:\n${itemsList}`);
+            await sendMessage(`Sr. ${userName}, por gentileza escolha pelo nome qual item deseja Atualizar:\n${itemsList}`, chatId, env);
             break;
 
         case normalize("Ver_itemsMenu"):
