@@ -43,6 +43,7 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
                             }
                         }else{
                             if(comand.length > 2 && usersItemList.includes((comand.slice(1)).join("_"))){
+                                await sendCallBackMessage("Entrou!!", chatId, env);
                                 messageText = comand.slice(1).join("_");
                             }else{
                                 for (const v of categoriesData) {
