@@ -28,19 +28,19 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
                 if(categories?.data || !normalize(messageText).includes(normalize("itemsmenu"))){
                     //await sendCallBackMessage("Entrou no if", chatId, env);
                     categoriesData = categories?.data ? (categories.data).split(',').map(f => f.trim()):"";
-                    if(usersItemList.indexOf(messageText) || usersItemList.indexOf(userState.state)){
+                    if(usersItemList.includes(messageText) || usersItemList.includes(userState.state)){
                         const allItems = await dataRead("products", null, env, chatId);
-                        for (const v of categoriesData) {
-                            const itemsByCategories = allItems.flat().filter(obj => String(obj["type"]) === String(v));
-                            itemsList += "\n<b>"+ normalize(v) +"</b>\n";
-                                for(const i of itemsByCategories){
-                                    const nameItems = await dataRead("assets", {id: (i.data.split(','))[0]}, env);
-                                        //await sendCallBackMessage(`Callback nameItems : ${JSON.stringify(nameItems)} | ${(i.data.split(','))[0]}`, chatId, env);
-                                            itemsList += `${indent} /` + normalize(nameItems.data) + `_itemsMenu\n`;
-                                }
-                                //await sendCallBackMessage(`debug v : ${normalize(v)}`, chatId, env);
-                            categoriesList += v !== undefined ? "\n" + indent + "\n/" + normalize(v) + "_ver_itemsMenu":"";
-                        }
+                            for (const v of categoriesData) {
+                                const itemsByCategories = allItems.flat().filter(obj => String(obj["type"]) === String(v));
+                                itemsList += "\n<b>"+ normalize(v) +"</b>\n";
+                                    for(const i of itemsByCategories){
+                                        const nameItems = await dataRead("assets", {id: (i.data.split(','))[0]}, env);
+                                            //await sendCallBackMessage(`Callback nameItems : ${JSON.stringify(nameItems)} | ${(i.data.split(','))[0]}`, chatId, env);
+                                                itemsList += `${indent} /` + normalize(nameItems.data) + `_itemsMenu\n`;
+                                    }
+                                    //await sendCallBackMessage(`debug v : ${normalize(v)}`, chatId, env);
+                                categoriesList += v !== undefined ? "\n" + indent + "\n/" + normalize(v) + "_ver_itemsMenu":"";
+                            }
                         }else{
                             if(comand.length > 2 && usersItemList.includes((comand.slice(1)).join("_"))){
                                 messageText = comand.slice(1).join("_");
@@ -48,8 +48,8 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
                                 for (const v of categoriesData) {
                                     categoriesList += v !== undefined ? "\n" + indent + "\n/" + normalize(v) + "_ver_itemsMenu":"";
                                 }
+                            }
                         }
-                    }
 
                     //await sendCallBackMessage(categories.data + ' - ' + categoriesList + ' - ' + userState.state,chatId,env);
                 }else{
@@ -91,7 +91,7 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
                         idView.push(i);
 //console.log(messageVizualization);
                     }
-                        const finalMessage = `Categoria: ${v.type}\n\nProduto: <b>${messageVizualization[0]}</b>\nDescrição: ${messageVizualization[2]}\n\nPreço: ${BRL(messageVizualization[3])}\n\n/catg${categoriesData.indexOf(v.type)}_atualizar_itemsMenu\n\n${indent}/nome${idView[0]}_atualizar_itemsMenu\n${indent}/desc${idView[2]}_atualizar_itemsMenu\n${indent}/preco${idView[3]}_atualizar_itemsMenu\n\n\n ${indent}produto${v.id}_excluir_itemsMenu`;
+                        const finalMessage = `Categoria: ${v.type}\n\nProduto: <b>${messageVizualization[0]}</b>\nDescrição: ${messageVizualization[2]}\n\nPreço: ${BRL(messageVizualization[3])}\n\n/catg${categoriesData.indexOf(v.type)}_atualizar_itemsMenu\n\n${indent}/nome${idView[0]}_atualizar_itemsMenu\n${indent}/desc${idView[2]}_atualizar_itemsMenu\n${indent}/preco${idView[3]}_atualizar_itemsMenu\n\n\n ${indent}/produto${v.id}_excluir_itemsMenu`;
                         let imgVizualization = await downloadGdrive(messageVizualization[1], env, chatId);
                         await sendMidia([imgVizualization, finalMessage], chatId, env);
                 }
