@@ -117,9 +117,10 @@ if (canListItems) {
 
         case normalize("Atualizar_itemsMenu"):
             userState.procesCont = 0;
-            userState.state = 'waiting_update_itemsmenu';
+                userState.state = 'waiting_update_itemsmenu';
+                await sendMessage(`Sr. ${userName}, por gentileza escolha pelo nome qual item deseja Atualizar:\n${itemsList}`, chatId, env);
+            
             await saveUserState(env, userId, userState);
-            await sendMessage(`Sr. ${userName}, por gentileza escolha pelo nome qual item deseja Atualizar:\n${itemsList}`, chatId, env);
             break;
 
         case normalize("Ver_itemsMenu"):
@@ -141,7 +142,7 @@ if (canListItems) {
                         idView.push(i);
 //console.log(messageVizualization);
                     }
-                        const finalMessage = `Categoria: ${v.type}\n\nProduto: <b>${messageVizualization[0]}</b>\nDescrição: ${messageVizualization[2]}\n\nPreço: ${BRL(messageVizualization[3])}\n\n/catg${categoriesData.indexOf(v.type)}_atualizar_itemsMenu\n\n${indent}/nome${idView[0]}_atualizar_itemsMenu\n${indent}/desc${idView[2]}_atualizar_itemsMenu\n${indent}/preco${idView[3]}_atualizar_itemsMenu\n\n\n ${indent}/produto${v.id}_excluir_itemsMenu`;
+                        const finalMessage = `Categoria: ${v.type}\n\nProduto: <b>${messageVizualization[0]}</b>\nDescrição: ${messageVizualization[2]}\n\nPreço: ${BRL(messageVizualization[3])}\n\n/catg${categoriesData.indexOf(v.type)}_atualizar_itemsMenu\n\n${indent}/nome${idView[0]}_atualizar_itemsMenu\n${indent}/descricao${idView[2]}_atualizar_itemsMenu\n${indent}/preco${idView[3]}_atualizar_itemsMenu\n\n\n ${indent}/produto${v.id}_excluir_itemsMenu`;
                         let imgVizualization = await downloadGdrive(messageVizualization[1], env, chatId);
                         await sendMidia([imgVizualization, finalMessage], chatId, env);
                 }
@@ -154,6 +155,25 @@ if (canListItems) {
     }
     if(!userState.state) return new Response('OK');
     switch (normalize(userState.state)) {
+        case normalize('waiting_preview_itemsmenu'):
+            userState.procesCont = 0;
+            userState.state = 'waiting_updateAsset_itemsmenu';
+            userState.titulo = '--update-Assets--'
+            userState.select.push(comand[0]);
+            await saveUserState(env, userId, userState);
+            await sendMessage(`Certo sr. ${userName}!\n Informe o novo ${comand[0].replace(/[^a-zA-Z]/g, "")}`, chatId, env);
+            break;
+
+        case normalize('waiting_updateasset_itemsmenu'):
+            userState.procesCont = 0;
+            userState.state = 'waiting_confirm_itemsmenu';
+            const currentData = dataRead('assets', {id: userState.titulo.replace(/[^0-9]/g, "")}, env)
+            await saveUserState(env, userId, userState);
+            userState.select.push(currentData);
+            await sendMessage(`OK sr. ${userName}!\n Deseja alterar a ${userState.titulo.replace(/[^a-zA-Z]/g, "")}\n De ${currentData.data}\nPara ${messageText}`, chatId, env);
+            await sendMessage("/SIM   |   /NAO", chatId, env);
+            break;
+            
         case normalize('waiting_section_itemsmenu'):
             userState.procesCont = 0;
             userState.state = 'waiting_comand_itemsmenu';
@@ -267,7 +287,15 @@ if (canListItems) {
             let dataItemsMenu = '';
             let categoryItemsMenu = '';
 
-            if (normalize(messageText) == normalize('sim')) {
+            if(normalize(userState.titulo) == normalize("--update-Assets--")){
+                switch(normalize(messageText)){
+                    case normalize("SIM"):
+                        const assetUpdate = userState.select[1];
+                        const assetIdUpdate = userState.select[0].replace(/\D/g, "");
+                        await dataUpdate([assetUpdate.data, assetIdUpdate], ["assets", "data"], chatId, env);
+                }
+            }else{
+                if (normalize(messageText) == normalize('sim')) {
                 const itemsMenu = userState.select;
 
                 // --- 1. Lógica de Categorias (Leitura e Atualização) ---
@@ -314,7 +342,7 @@ await sendCallBackMessage(typeof exctgrItemMenu.data +' - '+ vlrExctgrItemMenu, 
 
             // 3. Persistência Final do Produto (Armazena a lista de IDs no D1 através de yesOrNo)
             return await yesOrNo([dataItemsMenu, String(categoryItemsMenu)], ['products', 'data,type'], userId, chatId, userState, messageText, env);
-
+}
             default:
                 
                 break;
