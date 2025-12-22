@@ -17,12 +17,7 @@ export const comandTemplateCatalog01 = "templateCatalog01"
 // -----------------------------------------------------------------------------
 
 async function handleItensMenuFlow(userState, messageText, userId, chatId, userName, update, env) {
-                const categories = await dataRead(
-  "products",
-  { type: "categoryProductMenu" },
-  env,
-  chatId
-);
+const categories = await dataRead("products", { type: "categoryProductMenu" }, env, chatId);
 
 // ================================
 // Inicializações seguras
@@ -39,7 +34,7 @@ const comand = messageText.split("_");
 // ================================
 const joinedCommand = comand.slice(1).join("_");
 
-if (comand.length > 2 && usersItemList.includes(joinedCommand)) {
+if (comand.length > 2 && usersItemList.includes(normalize(joinedCommand))) {
   messageText = joinedCommand;
   await sendCallBackMessage("Entrou 1!!", chatId, env);
 }
