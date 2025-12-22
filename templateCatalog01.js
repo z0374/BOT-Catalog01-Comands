@@ -563,17 +563,17 @@ async function templateCatalog01(userState, messageText, userId, chatId, userNam
     let sectionName = sectionActive.find(name => ['configuracao', 'itemsmenu', 'cabecalho'].includes(name));
 
     // Roteamento para a função de fluxo correspondente
-    switch (sectionName) {
+    switch (normalize(sectionName)) {
 
-        case 'dataSave':
+        case normalize('dataSave'):
             return await handleVerdataSaveFlow(userState, messageText, userId, chatId, userName, update, env);
             break;
 
-        case 'itemsmenu':
+        case normalize('itemsmenu'):
             return await handleItensMenuFlow(userState, messageText, userId, chatId, userName, update, env);
             break;
 
-        case 'configuracao':
+        case normalize('configuracao'):
             return await handleConfiguracaoFlow(userState, messageText, userId, chatId, userName, update, env);
             break;
 
