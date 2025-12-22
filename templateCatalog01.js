@@ -17,49 +17,98 @@ export const comandTemplateCatalog01 = "templateCatalog01"
 // -----------------------------------------------------------------------------
 
 async function handleItensMenuFlow(userState, messageText, userId, chatId, userName, update, env) {
-                const categories = await dataRead("products", { type: "categoryProductMenu" }, env, chatId);
-                let categoriesData;
-                let categoriesList;
-                let itemsList;
-                const usersItemList = ['Atualizar_itemsMenu'];
-                const comand = messageText.split("_");
+                const categories = await dataRead(
+  "products",
+  { type: "categoryProductMenu" },
+  env,
+  chatId
+);
 
-                //await sendCallBackMessage("Categorias recuperadas: " + JSON.stringify(categories), chatId,env);
-                if(categories?.data || !normalize(messageText).includes(normalize("itemsmenu"))){
-                    //await sendCallBackMessage("Entrou no if", chatId, env);
-                    categoriesData = categories?.data ? (categories.data).split(',').map(f => f.trim()):"";
-                    if(usersItemList.includes(messageText) || usersItemList.includes(userState.state)){
-                        const allItems = await dataRead("products", null, env, chatId);
-                            for (const v of categoriesData) {
-                                const itemsByCategories = allItems.flat().filter(obj => String(obj["type"]) === String(v));
-                                itemsList += "\n<b>"+ normalize(v) +"</b>\n";
-                                    for(const i of itemsByCategories){
-                                        const nameItems = await dataRead("assets", {id: (i.data.split(','))[0]}, env);
-                                            //await sendCallBackMessage(`Callback nameItems : ${JSON.stringify(nameItems)} | ${(i.data.split(','))[0]}`, chatId, env);
-                                                itemsList += `${indent} /` + normalize(nameItems.data) + `_itemsMenu\n`;
-                                    }
-                                    //await sendCallBackMessage(`debug v : ${normalize(v)}`, chatId, env);
-                                categoriesList += v !== undefined ? "\n" + indent + "\n/" + normalize(v) + "_ver_itemsMenu":"";
-                            }
-                        }else{
-                                for (const v of categoriesData) {
-                                    categoriesList += v !== undefined ? "\n" + indent + "\n/" + normalize(v) + "_ver_itemsMenu":"";
-                                }
-                            }
-                        
+// ================================
+// Inicializações seguras
+// ================================
+let categoriesData = [];
+let categoriesList = "";
+let itemsList = "";
 
-                    //await sendCallBackMessage(categories.data + ' - ' + categoriesList + ' - ' + userState.state,chatId,env);
-                }else{
+const usersItemList = ["Atualizar_itemsMenu"];
+const comand = messageText.split("_");
 
-                            if(comand.length > 2 && usersItemList.includes((comand.slice(1)).join("_"))){
-                                await sendCallBackMessage("Entrou!!", chatId, env);
-                                messageText = comand.slice(1).join("_");
-                            }else{
-                                userState.procesCont = 0;
-                                userState.proces = comandTemplateCatalog01;
-                                userState.state = 'waiting_start_itemsmenu';
-                            }
-                }
+// ================================
+// 1️⃣ Resolver comando composto SEMPRE primeiro
+// ================================
+const joinedCommand = comand.slice(1).join("_");
+
+if (
+  comand.length > 2 &&
+  usersItemList.includes(joinedCommand)
+) {
+  messageText = joinedCommand;
+  //await sendCallBackMessage("Entrou!!", chatId, env);
+}
+
+// ================================
+// 2️⃣ Validar se deve processar itemsMenu
+// ================================
+const isItemsMenu = normalize(messageText).includes("itemsmenu");
+const hasCategories = Boolean(categories?.data);
+
+if (!hasCategories && isItemsMenu) {
+  // Estado inválido → reset
+  userState.procesCont = 0;
+  userState.proces = comandTemplateCatalog01;
+  userState.state = "waiting_start_itemsmenu";
+  return;
+}
+
+// ================================
+// 3️⃣ Preparar categorias
+// ================================
+if (hasCategories) {
+  categoriesData = categories.data
+    .split(",")
+    .map(v => v.trim())
+    .filter(Boolean);
+}
+
+// ================================
+// 4️⃣ Executar lógica principal
+// ================================
+const canListItems =
+  usersItemList.includes(messageText) ||
+  usersItemList.includes(userState.state);
+
+if (canListItems) {
+  const allItems = await dataRead("products", null, env, chatId);
+
+  for (const v of categoriesData) {
+    const itemsByCategories = allItems
+      .flat()
+      .filter(obj => String(obj.type) === String(v));
+
+    itemsList += `\n<b>${normalize(v)}</b>\n`;
+
+    for (const i of itemsByCategories) {
+      const assetId = i.data.split(",")[0];
+      const nameItems = await dataRead(
+        "assets",
+        { id: assetId },
+        env
+      );
+
+      itemsList += `${indent} /${normalize(nameItems.data)}_itemsMenu\n`;
+    }
+
+    categoriesList += `\n${indent}\n/${normalize(v)}_ver_itemsMenu`;
+  }
+
+} else {
+  // Apenas lista categorias
+  for (const v of categoriesData) {
+    categoriesList += `\n${indent}\n/${normalize(v)}_ver_itemsMenu`;
+  }
+}
+
                 
                 
     switch (normalize(messageText)) {
