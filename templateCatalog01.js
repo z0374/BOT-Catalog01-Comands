@@ -42,21 +42,23 @@ async function handleItensMenuFlow(userState, messageText, userId, chatId, userN
                                 categoriesList += v !== undefined ? "\n" + indent + "\n/" + normalize(v) + "_ver_itemsMenu":"";
                             }
                         }else{
-                            if(comand.length > 2 && usersItemList.includes((comand.slice(1)).join("_"))){
-                                await sendCallBackMessage("Entrou!!", chatId, env);
-                                messageText = comand.slice(1).join("_");
-                            }else{
                                 for (const v of categoriesData) {
                                     categoriesList += v !== undefined ? "\n" + indent + "\n/" + normalize(v) + "_ver_itemsMenu":"";
                                 }
                             }
-                        }
+                        
 
                     //await sendCallBackMessage(categories.data + ' - ' + categoriesList + ' - ' + userState.state,chatId,env);
                 }else{
-                    userState.procesCont = 0;
-                    userState.proces = comandTemplateCatalog01;
-                    userState.state = 'waiting_start_itemsmenu';
+
+                            if(comand.length > 2 && usersItemList.includes((comand.slice(1)).join("_"))){
+                                await sendCallBackMessage("Entrou!!", chatId, env);
+                                messageText = comand.slice(1).join("_");
+                            }else{
+                                userState.procesCont = 0;
+                                userState.proces = comandTemplateCatalog01;
+                                userState.state = 'waiting_start_itemsmenu';
+                            }
                 }
                 
                 
