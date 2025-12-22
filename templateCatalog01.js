@@ -39,12 +39,9 @@ const comand = messageText.split("_");
 // ================================
 const joinedCommand = comand.slice(1).join("_");
 
-if (
-  comand.length > 2 &&
-  usersItemList.includes(joinedCommand)
-) {
+if (comand.length > 2 && usersItemList.includes(joinedCommand)) {
   messageText = joinedCommand;
-  //await sendCallBackMessage("Entrou!!", chatId, env);
+  await sendCallBackMessage("Entrou 1!!", chatId, env);
 }
 
 // ================================
@@ -58,6 +55,7 @@ if (!hasCategories && isItemsMenu) {
   userState.procesCont = 0;
   userState.proces = comandTemplateCatalog01;
   userState.state = "waiting_start_itemsmenu";
+  await sendCallBackMessage("Entrou 2!!", chatId, env);
   return;
 }
 
@@ -69,6 +67,7 @@ if (hasCategories) {
     .split(",")
     .map(v => v.trim())
     .filter(Boolean);
+  await sendCallBackMessage("Entrou 3!!", chatId, env);
 }
 
 // ================================
@@ -101,12 +100,14 @@ if (canListItems) {
 
     categoriesList += `\n${indent}\n/${normalize(v)}_ver_itemsMenu`;
   }
+  await sendCallBackMessage("Entrou 4!!", chatId, env);
 
 } else {
   // Apenas lista categorias
   for (const v of categoriesData) {
     categoriesList += `\n${indent}\n/${normalize(v)}_ver_itemsMenu`;
   }
+  await sendCallBackMessage("Entrou 5!!", chatId, env);
 }
 
                 
