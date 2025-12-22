@@ -125,7 +125,7 @@ if (canListItems) {
         case normalize("Ver_itemsMenu"):
             console.log("ver Items - entrou")
             userState.procesCont = 0;
-            userState = null;
+            userState.state = "waiting_preview_itemsmenu";
             await saveUserState(env, userId, userState);
             const column = normalize(comand[0]) != normalize("ver") ? {type: comand[0]} : {};
             const productsVizualization = (await dataRead('products', column, env));
