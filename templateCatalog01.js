@@ -34,12 +34,12 @@ const comand = messageText.split("_");
 // ================================
 // 1️⃣ Resolver comando composto SEMPRE primeiro
 // ================================
-const joinedCommand = normalize(comand.slice(1).join("_"));
+/*const joinedCommand = normalize(comand.slice(1).join("_"));
 
 if (comand.length > 2 && usersItemList.includes(joinedCommand)) {
   messageText = joinedCommand;
   await sendCallBackMessage("Entrou 1!!", chatId, env);
-}
+}*/
 
 // ================================
 // 2️⃣ Validar se deve processar itemsMenu
