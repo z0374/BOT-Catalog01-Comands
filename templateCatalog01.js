@@ -17,7 +17,9 @@ export const comandTemplateCatalog01 = "templateCatalog01"
 // -----------------------------------------------------------------------------
 
 async function handleItensMenuFlow(userState, messageText, userId, chatId, userName, update, env) {
+
 const categories = await dataRead("products", { type: "categoryProductMenu" }, env, chatId);
+await sendCallBackMessage(normalize(messageText), chatId, env);
 
 // ================================
 // Inicializações seguras
