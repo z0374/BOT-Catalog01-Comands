@@ -31,7 +31,7 @@ let categoriesData = [];
 let categoriesList = "";
 let itemsList = "";
 
-const usersItemList = ["Atualizar_itemsMenu"];
+const usersItemList = ["atualizar_itemsmenu"];
 const comand = messageText.split("_");
 
 // ================================
