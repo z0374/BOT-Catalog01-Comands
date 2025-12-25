@@ -168,8 +168,8 @@ if (canListItems) {
             userState.procesCont = 0;
             userState.state = 'waiting_confirm_itemsmenu';
             const currentData = dataRead('assets', {id: userState.select[0].replace(/[^0-9]/g, "")},env);
-            await saveUserState(env, userId, userState);
             userState.select.push(currentData);
+            await saveUserState(env, userId, userState);
             await sendMessage(`OK sr. ${userName}!\n Deseja alterar a ${userState.select[0].replace(/[^a-zA-Z]/g, "")}\n De ${currentData.data}\nPara ${messageText}`, chatId, env);
             await sendMessage("/SIM   |   /NAO", chatId, env);
             break;
