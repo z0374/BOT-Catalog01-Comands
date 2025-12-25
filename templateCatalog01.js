@@ -155,6 +155,7 @@ if (canListItems) {
     }
     if(!userState.state) return new Response('OK');
     switch (normalize(userState.state)) {
+
         case normalize('waiting_preview_itemsmenu'):
             userState.procesCont = 0;
             userState.state = 'waiting_updateAsset_itemsmenu';
@@ -167,7 +168,7 @@ if (canListItems) {
         case normalize('waiting_updateasset_itemsmenu'):
             userState.procesCont = 0;
             userState.state = 'waiting_confirm_itemsmenu';
-            const currentData = dataRead('assets', {id: userState.select[0].replace(/[^0-9]/g, "")},env);
+            const currentData = await dataRead('assets', {id: (userState.select[0]).replace(/[^0-9]/g, "")},env);
             userState.select.push(currentData);
             await saveUserState(env, userId, userState);
             await sendMessage(`OK sr. ${userName}!\n Deseja alterar a ${userState.select[0].replace(/[^a-zA-Z]/g, "")}\n De ${currentData.data}\nPara ${messageText}`, chatId, env);
