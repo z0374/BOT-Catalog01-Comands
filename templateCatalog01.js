@@ -292,12 +292,14 @@ await sendMessage(userState.select[0], chatId, env);
             if(normalize(userState.titulo) == normalize("--update-Assets--")){
                 switch(normalize(messageText)){
                     case normalize("SIM"):
-                        await sendCallBackMessage("Entrou no update!", chatId, env);
+                        //await sendCallBackMessage("Entrou no update!", chatId, env);
                         const assetUpdate = userState.select[1];
                         const assetIdUpdate = userState.select[0].replace(/\D/g, "");
                         const content = [assetUpdate.data, assetIdUpdate];
                         const tabelaInfo = ["assets", "data"]; 
                         await dataUpdate(content, tabelaInfo, chatId, env);
+                        await sendMessage("Update Realizado!", chatId, env);
+                        return new Response("Update Realizado!", {status:200});
                         break;
                 }
             }else{
