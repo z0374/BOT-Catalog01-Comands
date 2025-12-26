@@ -207,10 +207,10 @@ if (canListItems) {
 
                         // 3. Após o loop terminar todos os itens, remove o produto pai
                         const productId = userState.select[0].replace(/[^0-9]/g, "");
-                        
+                        await sendCallBackMessage(productId, chatId, env);
                         if (productId) {
-                            await dataDelete("product", Number(productId), chatId, env);
-                            await sendMessage("Produto e todos os seus itens foram excluídos com sucesso!", chatId, env);
+                            await dataDelete("products", Number(productId), chatId, env);
+                            await sendMessage(`Produto e todos os seus itens foram excluídos com sucesso!\n/comandos${indent}|${indent}/${comandTemplateCatalog01}`, chatId, env);
                         }
 
                         } catch (erro) {
@@ -221,7 +221,7 @@ if (canListItems) {
                         break;
 
                 case normalize("/NAO"):
-                    return await yesOrNo(userState.select, "product", userId, chatId, userState, messageText, env);
+                    return await yesOrNo(userState.select, "products", userId, chatId, userState, messageText, env);
                     break;
             
                 default:
