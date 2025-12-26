@@ -294,7 +294,7 @@ await sendMessage(userState.select[0], chatId, env);
                     case normalize("SIM"):
                         const assetUpdate = userState.select[1];
                         const assetIdUpdate = userState.select[0].replace(/\D/g, "");
-                        await dataUpdate([assetUpdate.data, assetIdUpdate], ["assets", "data, id"], chatId, env);
+                        await dataUpdate([assetUpdate.data, assetIdUpdate], ["assets", "data"], chatId, env);
                 }
             }else{
                 if (normalize(messageText) == normalize('sim')) {
