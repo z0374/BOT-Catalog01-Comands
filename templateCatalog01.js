@@ -296,7 +296,7 @@ if (canListItems) {
                         //await sendCallBackMessage("Entrou no update!", chatId, env);
                         const assetUpdate = itemsMenu[1];
                         const assetIdUpdate = itemsMenu[0].replace(/\D/g, "");
-                        const content = [assetUpdate.data, assetIdUpdate];
+                        const content = [assetUpdate, assetIdUpdate];
                         const tabelaInfo = ["assets", "data"]; 
                         await dataUpdate(content, tabelaInfo, chatId, env);
                         await sendMessage(`Update Realizado!\n/comandos${indent}|${indent}/${comandTemplateCatalog01}`, chatId, env);
