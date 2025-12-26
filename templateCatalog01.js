@@ -173,7 +173,7 @@ if (canListItems) {
                     userState.select.push(comand[0]);
                     userState.select.push(selectedProduct);
                     await saveUserState(env, userId, userState);
-                    const nameProduct = await dataRead("assets", {id: (selectedProduct.data.split(","))[0]});
+                    const nameProduct = await dataRead("assets", {id: (selectedProduct.data.split(","))[0]}, env);
                     await sendMessage(`Certo sr. ${userName}!\n Tem certeza que deseja excluir o produto " ${nameProduct} "?`, chatId, env);
                     await sendMessage(`/SIM${indent}|${indent}/NAO`, chatId, env);
                     break;
