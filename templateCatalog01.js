@@ -2,7 +2,7 @@
 
 // Importações de Módulos (Assumindo a estrutura de diretórios do repositório)
 import { loadUserState, saveUserState } from "../../engine/src/db/session.js";
-import { dataSave, dataExist, dataRead, dataUpdate } from "../../engine/src/db/D1.js";
+import { dataSave, dataExist, dataRead, dataUpdate, dataDelete } from "../../engine/src/db/D1.js";
 import { sendMessage, sendCallBackMessage, sendMidia } from "../../engine/src/utils/message.js";
 import { normalize, brMap, BRL } from "../../engine/src/utils/formatters.js";
 import { image } from "../../engine/src/utils/arquives.js"; // Função 'image' agora requer 4 argumentos (fileId, name, mimeType, env, chatId)
@@ -159,7 +159,7 @@ if (canListItems) {
         case normalize('waiting_preview_itemsmenu'):
             userState.procesCont = 0;
             userState.select.push(comand[0]);
-            switch (comand[1]) {
+            switch (normalize(comand[1])) {
                 case normalize("Atualizar"):
                     userState.state = 'waiting_updateAsset_itemsmenu';
                     userState.titulo = '--update-Assets--'
@@ -167,12 +167,13 @@ if (canListItems) {
                     break;
 
                 case normalize("Excluir"):
-                    userState.state = 'waiting_excluirAsset_itemsmenu';
+                    userState.state = 'waiting_excluirProduct_itemsmenu';
                     userState.titulo = '--excluir-Produto--';
-                    const selectedPruduct = await dataRead("product", {id: comand[0].replace(/[^0-9]/g, "")}, env);
+                    const selectedProduct = await dataRead("product", {id: comand[0].replace(/[^0-9]/g, "")}, env);
                     userState.select.push(comand[0]);
-                    userState.select.push(selectedPruduct);
-                    const nameProduct = await dataRead("assets", {id: (selectedPruduct.data.split(","))[0]});
+                    userState.select.push(selectedProduct);
+                    await saveUserState(env, userId, userState);
+                    const nameProduct = await dataRead("assets", {id: (selectedProduct.data.split(","))[0]});
                     await sendMessage(`Certo sr. ${userName}!\n Tem certeza que deseja excluir o produto " ${nameProduct} "?`, chatId, env);
                     await sendMessage(`/SIM${indent}|${indent}/NAO`, chatId, env);
                     break;
@@ -181,6 +182,39 @@ if (canListItems) {
                     break;
             }
             await saveUserState(env, userId, userState);
+            break;
+
+        case normalize('waiting_excluirProduct_itemsmenu'):
+            switch (normalize(messageText)) {
+                case normalize("/SIM"):
+                    try {
+                        const assetsDeleted = (userState.select[1]).data.split(",");
+
+                        // 1. Criamos um array de promessas de exclusão para todos os assets
+                        const exclusaoPromessas = assetsDeleted.map(v => 
+                            dataDelete("assets", Number(v.trim()), chatId, env)
+                        );
+
+                        // 2. Executamos todas as exclusões de assets em paralelo
+                        await Promise.all(exclusaoPromessas);
+
+                        // 3. Após todos os assets serem removidos, removemos o produto
+                        const productId = userState.select[0].replace(/[^0-9]/g, "");
+                        await dataDelete("product", Number(productId), chatId, env);
+                    } catch (erro) {
+                        const err = erro.stack;
+                        sendCallBackMessage("Erro ao deletar items" + err, chatId, env);
+                        return new Response(err,{status:200});
+                    }
+                    break;
+
+                case normalize("/NAO"):
+                    return await yesOrNo(userState.select, "product", userId, chatId, userState, messageText, env);
+                    break;
+            
+                default:
+                    break;
+            }
             break;
 
         case normalize('waiting_updateasset_itemsmenu'):
