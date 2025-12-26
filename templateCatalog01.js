@@ -169,9 +169,8 @@ if (canListItems) {
             userState.procesCont = 0;
             userState.state = 'waiting_confirm_itemsmenu';
             const currentData = await dataRead('assets', {id: userState.select[0].replace(/[^0-9]/g, "")},env);
-            userState.select.push(currentData);
+            userState.select.push(messageText);
             await saveUserState(env, userId, userState);
-await sendMessage(userState.select[0], chatId, env);
             await sendMessage(`OK sr. ${userName}!\n Deseja alterar a ${userState.select[0].replace(/[^a-zA-Z]/g, "")}\n De ${currentData.data}\nPara ${messageText}`, chatId, env);
             await sendMessage("/SIM   |   /NAO", chatId, env);
             break;
@@ -289,23 +288,21 @@ await sendMessage(userState.select[0], chatId, env);
             let dataItemsMenu = '';
             let categoryItemsMenu = '';
 
-            if(normalize(userState.titulo) == normalize("--update-Assets--")){
-                switch(normalize(messageText)){
-                    case normalize("SIM"):
-                        //await sendCallBackMessage("Entrou no update!", chatId, env);
-                        const assetUpdate = userState.select[1];
-                        const assetIdUpdate = userState.select[0].replace(/\D/g, "");
-                        const content = [assetUpdate.data, assetIdUpdate];
-                        const tabelaInfo = ["assets", "data"]; 
-                        await dataUpdate(content, tabelaInfo, chatId, env);
-                        await sendMessage("Update Realizado!", chatId, env);
-                        return new Response("Update Realizado!", {status:200});
-                        break;
-                }
-            }else{
+            
                 if (normalize(messageText) == normalize('sim')) {
                 const itemsMenu = userState.select;
 
+                if(normalize(userState.titulo) == normalize("--update-Assets--")){
+                        //await sendCallBackMessage("Entrou no update!", chatId, env);
+                        const assetUpdate = itemsMenu[1];
+                        const assetIdUpdate = itemsMenu[0].replace(/\D/g, "");
+                        const content = [assetUpdate.data, assetIdUpdate];
+                        const tabelaInfo = ["assets", "data"]; 
+                        await dataUpdate(content, tabelaInfo, chatId, env);
+                        await sendMessage(`Update Realizado!\n/comandos${indent}|${indent}/${comandTemplateCatalog01}`, chatId, env);
+                        await saveUserState(env, userId, null);
+                        return new Response("Update Realizado!", {status:200});
+            }else{
                 // --- 1. Lógica de Categorias (Leitura e Atualização) ---
                 try {
                     const exctgrItemMenu = await dataRead('products', {type: 'categoryProductMenu'}, env);
@@ -347,10 +344,9 @@ await sendCallBackMessage(typeof exctgrItemMenu.data +' - '+ vlrExctgrItemMenu, 
                     throw new Error(logErro); // Propaga a falha de persistência
                 }
             }
-
+}
             // 3. Persistência Final do Produto (Armazena a lista de IDs no D1 através de yesOrNo)
             return await yesOrNo([dataItemsMenu, String(categoryItemsMenu)], ['products', 'data,type'], userId, chatId, userState, messageText, env);
-}
             default:
                 
                 break;
