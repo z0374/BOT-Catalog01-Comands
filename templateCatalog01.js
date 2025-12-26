@@ -202,6 +202,7 @@ if (canListItems) {
                         // 3. Após todos os assets serem removidos, removemos o produto
                         const productId = userState.select[0].replace(/[^0-9]/g, "");
                         await dataDelete("product", Number(productId), chatId, env);
+                        await sendMessage("Produto excluído com sucesso!", chatId, env);
                     } catch (erro) {
                         const err = erro.stack;
                         sendCallBackMessage("Erro ao deletar items" + err, chatId, env);
