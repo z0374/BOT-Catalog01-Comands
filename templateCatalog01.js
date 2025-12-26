@@ -158,11 +158,29 @@ if (canListItems) {
 
         case normalize('waiting_preview_itemsmenu'):
             userState.procesCont = 0;
-            userState.state = 'waiting_updateAsset_itemsmenu';
-            userState.titulo = '--update-Assets--'
             userState.select.push(comand[0]);
+            switch (comand[1]) {
+                case normalize("Atualizar"):
+                    userState.state = 'waiting_updateAsset_itemsmenu';
+                    userState.titulo = '--update-Assets--'
+                    await sendMessage(`Certo sr. ${userName}!\n Informe o novo ${comand[0].replace(/[^a-zA-Z]/g, "")}`, chatId, env);
+                    break;
+
+                case normalize("Excluir"):
+                    userState.state = 'waiting_excluirAsset_itemsmenu';
+                    userState.titulo = '--excluir-Produto--';
+                    const selectedPruduct = await dataRead("product", {id: comand[0].replace(/[^0-9]/g, "")}, env);
+                    userState.select.push(comand[0]);
+                    userState.select.push(selectedPruduct);
+                    const nameProduct = await dataRead("assets", {id: (selectedPruduct.data.split(","))[0]});
+                    await sendMessage(`Certo sr. ${userName}!\n Tem certeza que deseja excluir o produto " ${nameProduct} "?`, chatId, env);
+                    await sendMessage(`/SIM${indent}|${indent}/NAO`, chatId, env);
+                    break;
+            
+                default:
+                    break;
+            }
             await saveUserState(env, userId, userState);
-            await sendMessage(`Certo sr. ${userName}!\n Informe o novo ${comand[0].replace(/[^a-zA-Z]/g, "")}`, chatId, env);
             break;
 
         case normalize('waiting_updateasset_itemsmenu'):
@@ -299,7 +317,7 @@ if (canListItems) {
                         const content = [assetUpdate, assetIdUpdate];
                         const tabelaInfo = ["assets", "data"]; 
                         await dataUpdate(content, tabelaInfo, chatId, env);
-                        await sendMessage(`Update Realizado!\n/comandos${indent}|${indent}/${comandTemplateCatalog01}`, chatId, env);
+                        await sendMessage(`/comandos${indent}|${indent}/${comandTemplateCatalog01}`, chatId, env);
                         await saveUserState(env, userId, null);
                         return new Response("Update Realizado!", {status:200});
             }else{
