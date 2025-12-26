@@ -174,7 +174,7 @@ if (canListItems) {
                     userState.select.push(selectedProduct);
                     await saveUserState(env, userId, userState);
                     const nameProduct = await dataRead("assets", {id: (selectedProduct.data.split(","))[0]}, env);
-                    await sendCallBackMessage(JSON.stringify(selectedProduct) + " - " + JSON.stringify(nameProduct), chatId, env);
+                    await sendCallBackMessage(JSON.stringify(userState.select) + " - " + JSON.stringify(nameProduct), chatId, env);
                     await sendMessage(`Certo sr. ${userName}!\n Tem certeza que deseja excluir o produto " ${nameProduct.data} "?`, chatId, env);
                     await sendMessage(`/SIM${indent}|${indent}/NAO`, chatId, env);
                     break;
@@ -191,7 +191,7 @@ if (canListItems) {
                     try {
                         // 1. Obtém os dados e verifica se existem para evitar erro de .split()
                         const assetsData = userState.select[1]?.data;
-                        if (!assetsData) throw new Error("Nenhum ativo encontrado para exclusão.");
+                        //if (!assetsData) throw new Error("Nenhum ativo encontrado para exclusão.");
 
                         const assetsDeleted = assetsData.split(",");
 
