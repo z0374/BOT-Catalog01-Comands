@@ -169,7 +169,7 @@ if (canListItems) {
                 case normalize("Excluir"):
                     userState.state = 'waiting_excluirProduct_itemsmenu';
                     userState.titulo = '--excluir-Produto--';
-                    const selectedProduct = await dataRead("product", {id: comand[0].replace(/[^0-9]/g, "")}, env);
+                    const selectedProduct = await dataRead("products", {id: comand[0].replace(/[^0-9]/g, "")}, env);
                     userState.select.push(comand[0]);
                     userState.select.push(selectedProduct);
                     await saveUserState(env, userId, userState);
