@@ -204,12 +204,18 @@ if (canListItems) {
                                 // await sendMessage(`Item ${assetId} excluído!`, chatId, env);
                             }
                         }
-
+                        
                         // 3. Após o loop terminar todos os itens, remove o produto pai
                         const productId = userState.select[0].replace(/[^0-9]/g, "");
                         await sendCallBackMessage(productId, chatId, env);
                         if (productId) {
                             await dataDelete("products", Number(productId), chatId, env);
+                            const categorieNumber = await dataRead("products", {type: assetsData.type}, env);
+                                if(categorieNumber.length == 0){
+                                    const categories = await dataRead("products", {id: 0}, env);
+                                    const saveCategories = categories.filter(item => item !== ( assetsData.type ));
+                                    await dataUpdate([(saveCategories.join(',')), 'categoryProductMenu'], ['products', 'data, type'], chatId, env);
+                                }
                             await sendMessage(`Produto e todos os seus itens foram excluídos com sucesso!\n/comandos${indent}|${indent}/${comandTemplateCatalog01}`, chatId, env);
                         }
 
