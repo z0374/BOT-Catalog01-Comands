@@ -189,26 +189,37 @@ if (canListItems) {
             switch (normalize(messageText)) {
                 case normalize("/SIM"):
                     try {
-                        const assetsDeleted = (userState.select[1]).data.split(",");
+                        // 1. Obtém os dados e verifica se existem para evitar erro de .split()
+                        const assetsData = userState.select[1]?.data;
+                        if (!assetsData) throw new Error("Nenhum ativo encontrado para exclusão.");
 
-                        // 1. Criamos um array de promessas de exclusão para todos os assets
-                        const exclusaoPromessas = assetsDeleted.map(v => 
-                            dataDelete("assets", Number(v.trim()), chatId, env)
-                        );
+                        const assetsDeleted = assetsData.split(",");
 
-                        // 2. Executamos todas as exclusões de assets em paralelo
-                        await Promise.all(exclusaoPromessas);
+                        // 2. Loop Sequencial: Espera cada exclusão terminar antes de ir para a próxima
+                        for (const v of assetsDeleted) {
+                            const assetId = Number(v.trim());
+                            
+                            if (!isNaN(assetId)) {
+                                await dataDelete("assets", assetId, chatId, env);
+                                // Opcional: Enviar mensagem individual por item
+                                // await sendMessage(`Item ${assetId} excluído!`, chatId, env);
+                            }
+                        }
 
-                        // 3. Após todos os assets serem removidos, removemos o produto
+                        // 3. Após o loop terminar todos os itens, remove o produto pai
                         const productId = userState.select[0].replace(/[^0-9]/g, "");
-                        await dataDelete("product", Number(productId), chatId, env);
-                        await sendMessage("Produto excluído com sucesso!", chatId, env);
-                    } catch (erro) {
-                        const err = erro.stack;
-                        sendCallBackMessage("Erro ao deletar items" + err, chatId, env);
-                        return new Response(err,{status:200});
-                    }
-                    break;
+                        
+                        if (productId) {
+                            await dataDelete("product", Number(productId), chatId, env);
+                            await sendMessage("Produto e todos os seus itens foram excluídos com sucesso!", chatId, env);
+                        }
+
+                        } catch (erro) {
+                            const err = erro.stack || erro.message;
+                            await sendCallBackMessage("Erro ao deletar items:\n" + err, chatId, env);
+                            return new Response(err, { status: 200 });
+                        }
+                        break;
 
                 case normalize("/NAO"):
                     return await yesOrNo(userState.select, "product", userId, chatId, userState, messageText, env);
