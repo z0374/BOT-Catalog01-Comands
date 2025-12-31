@@ -207,9 +207,9 @@ if (canListItems) {
                         
                         // 3. Após o loop terminar todos os itens, remove o produto pai
                         const productId = userState.select[0].replace(/[^0-9]/g, "");
-                        await sendCallBackMessage(productId, chatId, env);
+                        await sendCallBackMessage("Id" + productId, chatId, env);
                         if (productId) {
-                            await dataDelete("products", Number(productId), chatId, env);
+                            await dataDelete("products", parseInt(productId), chatId, env);
                             const categorieNumber = await dataRead("products", {type: assetsData.type}, env);
                                 if(categorieNumber.length == 0){
                                     const categories = await dataRead("products", {id: 0}, env);
