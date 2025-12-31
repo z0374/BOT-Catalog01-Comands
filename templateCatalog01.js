@@ -211,7 +211,7 @@ if (canListItems) {
                         if (productId) {
                             await dataDelete("products", parseInt(productId), chatId, env);
                             const categorieNumber = await dataRead("products", {type: assetsData.type}, env);
-                                if(!categorieNumber || categorieNumber.length == 0){
+                                if(!categorieNumber || categorieNumber.length == 0){ await sendCallBackMessage("Entrou no if de categorieNumber" + categorieNumber, chatId, env);
                                     const categories = await dataRead("products", {id: 1}, env);
                                     const saveCategories = categories.filter(item => item !== ( assetsData.type ));
                                     await dataUpdate([(saveCategories.join(',')), 'categoryProductMenu'], ['products', 'data, type'], chatId, env);
