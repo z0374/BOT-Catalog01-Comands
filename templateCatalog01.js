@@ -672,7 +672,7 @@ async function templateCatalog01(userState, messageText, userId, chatId, userNam
             return await handleVerdataSaveFlow(userState, messageText, userId, chatId, userName, update, env);
             break;
 
-        case normalize('Produtos'):
+        case normalize('produtos'):
             return await handleItensMenuFlow(userState, messageText, userId, chatId, userName, update, env);
             break;
 
