@@ -52,7 +52,7 @@ if (!hasCategories && isItemsMenu) {
   userState.procesCont = 0;
   userState.proces = comandTemplateCatalog01;
   userState.state = "waiting_start_itemsmenu";
-  await sendCallBackMessage("Entrou 2!!", chatId, env);
+  //await sendCallBackMessage("Entrou 2!!", chatId, env);
   return;
 }
 
@@ -64,7 +64,7 @@ if (hasCategories) {
     .split(",")
     .map(v => v.trim())
     .filter(Boolean);
-  await sendCallBackMessage("Entrou 3!!", chatId, env);
+  //await sendCallBackMessage("Entrou 3!!", chatId, env);
 }
 
 // ================================
@@ -97,14 +97,14 @@ if (canListItems) {
 
     categoriesList += `\n${indent}\n/${normalize(v)}_ver_itemsMenu`;
   }
-  await sendCallBackMessage("Entrou 4!!", chatId, env);
+  //await sendCallBackMessage("Entrou 4!!", chatId, env);
 
 } else {
   // Apenas lista categorias
   for (const v of categoriesData) {
     categoriesList += `\n${indent}\n/${normalize(v)}_ver_itemsMenu`;
   }
-  await sendCallBackMessage("Entrou 5!!", chatId, env);
+  //await sendCallBackMessage("Entrou 5!!", chatId, env);
 }
 
                 
@@ -124,7 +124,7 @@ if (canListItems) {
             break;
 
         case normalize("Ver_itemsMenu"):
-            console.log("ver Items - entrou")
+            //console.log("ver Items - entrou")
             userState.procesCont = 0;
             userState.state = "waiting_preview_itemsmenu";
             await saveUserState(env, userId, userState);
@@ -211,12 +211,12 @@ if (canListItems) {
                         if (productId) {
                             await dataDelete("products", parseInt(productId), chatId, env);
                             const categorieNumber = await dataRead("products", {type: assetsData.type}, env);
-                                if(categorieNumber.length == 0){
+                                if(!categorieNumber || categorieNumber.length == 0){
                                     const categories = await dataRead("products", {id: 1}, env);
                                     const saveCategories = categories.filter(item => item !== ( assetsData.type ));
                                     await dataUpdate([(saveCategories.join(',')), 'categoryProductMenu'], ['products', 'data, type'], chatId, env);
                                 }
-                            await sendMessage(`Produto e todos os seus itens foram excluídos com sucesso!\n/comandos${indent}|${indent}/${comandTemplateCatalog01}`, chatId, env);
+                            await sendMessage(`O Produto e todos os seus itens foram excluídos com sucesso!\n/comandos${indent}|${indent}/${comandTemplateCatalog01}`, chatId, env);
                         }
 
                         } catch (erro) {
