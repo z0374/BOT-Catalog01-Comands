@@ -224,6 +224,7 @@ if (canListItems) {
                             await sendCallBackMessage("Erro ao deletar items:\n" + err, chatId, env);
                             return new Response(err, { status: 200 });
                         }
+                        await saveUserState(env, userId, null);
                         break;
 
                 case normalize("/NAO"):
