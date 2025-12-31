@@ -663,7 +663,7 @@ async function templateCatalog01(userState, messageText, userId, chatId, userNam
 
     // Determina a seção ativa para roteamento
     let sectionActive = ((userState.state).toLowerCase()).split('_');
-    let sectionName = sectionActive.find(name => ['configuracao', 'Produtos', 'cabecalho'].includes(name));
+    let sectionName = sectionActive.find(name => ['configuracao', 'produtos', 'cabecalho'].includes(name));
 
     // Roteamento para a função de fluxo correspondente
     switch (normalize(sectionName)) {
