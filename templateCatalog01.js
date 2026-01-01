@@ -44,7 +44,7 @@ if (comand.length > 2 && usersItemList.includes(joinedCommand)) {
 // ================================
 // 2️⃣ Validar se deve processar Produtos
 // ================================
-const isProdutos = normalize(messageText).includes("Produtos");
+const isProdutos = normalize(messageText).includes("produtos");
 const hasCategories = Boolean(categories);
 
 if (!hasCategories && isProdutos) {
@@ -59,7 +59,7 @@ if (!hasCategories && isProdutos) {
 // ================================
 // 3️⃣ Preparar categorias
 // ================================
-if (hasCategories) {
+if (categories.length !== 0) {
   categoriesData = categories.data
     .split(",")
     .map(v => v.trim())
