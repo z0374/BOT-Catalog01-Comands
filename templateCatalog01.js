@@ -42,29 +42,22 @@ if (comand.length > 2 && usersItemList.includes(joinedCommand)) {
 }*/
 
 // ================================
-// 2️⃣ Validar se deve processar Produtos
-// ================================
-const isProdutos = normalize(messageText).includes("produtos");
-const hasCategories = Boolean(categories);
-
-if (!hasCategories && isProdutos) {
-  // Estado inválido → reset
-  userState.procesCont = 0;
-  userState.proces = comandTemplateCatalog01;
-  userState.state = "waiting_start_Produtos";
-  await sendCallBackMessage("Entrou 2!!", chatId, env);
-  return;
-}
-
-// ================================
 // 3️⃣ Preparar categorias
 // ================================
-if (categories.length !== 0) {
-  categoriesData = categories.data
-    .split(",")
-    .map(v => v.trim())
-    .filter(Boolean);
-  //await sendCallBackMessage("Entrou 3!!", chatId, env);
+if (categories.length == 0) {
+    // Estado inválido → reset
+    userState.procesCont = 0;
+    userState.proces = comandTemplateCatalog01;
+    userState.state = "waiting_start_Produtos";
+    //await sendCallBackMessage("Entrou 2!!", chatId, env);
+    return;
+  }else{
+    categoriesData = categories.data
+        .split(",")
+        .map(v => v.trim())
+        .filter(Boolean);
+        //await sendCallBackMessage("Entrou 3!!", chatId, env);
+
 }
 
 // ================================
