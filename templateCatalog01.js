@@ -52,12 +52,11 @@ if (categories.length == 0) {
     //await sendCallBackMessage("Entrou 2!!", chatId, env);
     return;
   }else{
-    categoriesData = categories.data
+    categoriesData.push(...categories.data
         .split(",")
         .map(v => v.trim())
-        .filter(Boolean);
+        .filter(Boolean));
         //await sendCallBackMessage("Entrou 3!!", chatId, env);
-
 }
 
 // ================================
