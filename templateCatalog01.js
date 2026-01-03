@@ -50,7 +50,9 @@ if (categories.length == 0 && normalize(messageText) == normalize("produtos")) {
     userState.proces = comandTemplateCatalog01;
     userState.state = "waiting_start_produtos";
     //await sendCallBackMessage("Entrou 2!!", chatId, env);
-  }else{
+  }
+  
+  if(categories.length != 0){
     categoriesData.push(...categories.data
         .split(",")
         .map(v => v.trim())
