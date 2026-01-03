@@ -48,9 +48,8 @@ if (categories.length == 0) {
     // Estado inválido → reset
     userState.procesCont = 0;
     userState.proces = comandTemplateCatalog01;
-    userState.state = "waiting_start_Produtos";
+    userState.state = "waiting_start_produtos";
     //await sendCallBackMessage("Entrou 2!!", chatId, env);
-    return;
   }else{
     categoriesData.push(...categories.data
         .split(",")
@@ -228,7 +227,7 @@ if (canListItems) {
             }
             break;
 
-        case normalize('waiting_updateasset_Produtos'):
+        case normalize('waiting_updateasset_produtos'):
             userState.procesCont = 0;
             userState.state = 'waiting_confirm_Produtos';
             const currentData = await dataRead('assets', {id: userState.select[0].replace(/[^0-9]/g, "")},env);
@@ -238,7 +237,7 @@ if (canListItems) {
             await sendMessage("/SIM   |   /NAO", chatId, env);
             break;
             
-        case normalize('waiting_section_Produtos'):
+        case normalize('waiting_section_produtos'):
             userState.procesCont = 0;
             userState.state = 'waiting_comand_Produtos';
             await saveUserState(env, userId, userState);
