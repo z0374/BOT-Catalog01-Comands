@@ -44,7 +44,7 @@ if (comand.length > 2 && usersItemList.includes(joinedCommand)) {
 // ================================
 // 3️⃣ Preparar categorias
 // ================================
-if (categories.length == 0) {
+if (categories.length == 0 && normalize(messageText) == normalize("produtos")) {
     // Estado inválido → reset
     userState.procesCont = 0;
     userState.proces = comandTemplateCatalog01;
