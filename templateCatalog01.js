@@ -200,14 +200,14 @@ if (canListItems) {
                         
                         // 3. Após o loop terminar todos os itens, remove o produto pai
                         const productId = userState.select[0].replace(/[^0-9]/g, "");
-                        await sendCallBackMessage("Id" + productId, chatId, env);
+                            //await sendCallBackMessage("Id" + productId, chatId, env);
                         if (productId) {
                             await dataDelete("products", parseInt(productId), chatId, env);
                             const categorieNumber = await dataRead("products", {type: assetsData.type}, env);
                                     //await sendCallBackMessage(`Callback categorieNumber .: ${categories}`, chatId, env);
-                                if(!categorieNumber || categorieNumber.length == 0){ await sendCallBackMessage("Entrou no if de categorieNumber" + categorieNumber, chatId, env);
+                                if(!categorieNumber || categorieNumber.length == 0){ //await sendCallBackMessage("Entrou no if de categorieNumber" + categorieNumber, chatId, env);
                                     if(categoriesData.length <= 1){
-                                        await dataDelete("products", {id: 1}, chatId, env);
+                                        await env.Data.prepare("DROP TABLE IF EXISTS products").run();
                                     }else{
                                         const saveCategories = categoriesData.filter(item => item !== ( assetsData.type ));
                                         await dataUpdate([(saveCategories.join(',')), 'categoryProductMenu'], ['products', 'data, type'], chatId, env);
