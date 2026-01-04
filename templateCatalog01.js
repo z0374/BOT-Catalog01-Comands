@@ -51,7 +51,7 @@ if (categories.length == 0 && normalize(messageText) == normalize("produtos")) {
     userState.state = "waiting_start_produtos";
     //await sendCallBackMessage("Entrou 2!!", chatId, env);
   }
-  
+
   if(categories.length != 0){
     categoriesData.push(...categories.data
         .split(",")
@@ -182,10 +182,10 @@ if (canListItems) {
                 case normalize("/SIM"):
                     try {
                         // 1. Obtém os dados e verifica se existem para evitar erro de .split()
-                        const assetsData = userState.select[1]?.data;
+                        const assetsData = userState.select[1];
                         if (!assetsData) throw new Error("Nenhum ativo encontrado para exclusão.");
 
-                        const assetsDeleted = assetsData.split(",");
+                        const assetsDeleted = (assetsData.data).split(",");
 
                         // 2. Loop Sequencial: Espera cada exclusão terminar antes de ir para a próxima
                         for (const v of assetsDeleted) {
@@ -204,6 +204,7 @@ if (canListItems) {
                         if (productId) {
                             await dataDelete("products", parseInt(productId), chatId, env);
                             const categorieNumber = await dataRead("products", {type: assetsData.type}, env);
+                                    await sendCallBackMessage(`Callback categorieNumber .: ${categorieNumber}`, chatId, env);
                                 if(!categorieNumber || categorieNumber.length == 0){ await sendCallBackMessage("Entrou no if de categorieNumber" + categorieNumber, chatId, env);
                                     const categories = await dataRead("products", {id: 1}, env);
                                     const saveCategories = categories.filter(item => item !== ( assetsData.type ));
